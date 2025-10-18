@@ -90,20 +90,26 @@ public class PartyProjectile2D : MonoBehaviour
             }
         }
 
-        // 2) 벽 반사 (물리 재질 없이 코드로 확실하게)
+        // 2) 벽 반사 (겹침 해소 + 정확 반사)
         if (((1 << lay) & _launcher.wallMask) != 0)
         {
-            // 첫 번째 접촉 지점의 법선으로 반사
-            Vector2 n = c.contacts.Length > 0 ? c.contacts[0].normal : Vector2.up;
+            // 접촉점/법선
+            Vector2 n = c.contactCount > 0 ? c.GetContact(0).normal : Vector2.up;
+
+            // 현재 속도/방향
             Vector2 v = rb.linearVelocity;
+            float speed = v.magnitude;
+            if (speed < 0.0001f) speed = _launcher.projectileSpeed; // 혹시 0이면 보정
 
-            if (v.sqrMagnitude < 0.0001f) v = transform.up; // 혹시 0이라면 보정
-            Vector2 reflected = Vector2.Reflect(v, n);
+            // 콜라이더가 벽 안쪽에 있을 수 있으니 'skin' 만큼 밖으로 밀어냄
+            const float SKIN = 0.02f;
+            rb.position = rb.position + n * SKIN;
 
-            // 약간의 감쇠를 주면 벽에 들러붙는 현상 방지 (원하면 1.0f로)
-            rb.linearVelocity = reflected * 0.98f;
+            // 반사
+            Vector2 r = Vector2.Reflect(v.normalized, n);
+            rb.linearVelocity = r * Mathf.Max(speed * 0.98f, 2.0f); // 미세 감쇠 + 최소 반사 속도
 
-            // 마법사 벽-스킬 (옵션)
+            // (옵션) 마법사 벽-스킬
             if (triggerSkillOnWall && burstProjectilePrefab)
             {
                 for (int i = 0; i < burstCount; i++)
@@ -119,6 +125,7 @@ public class PartyProjectile2D : MonoBehaviour
                 }
             }
         }
+
     }
 
 

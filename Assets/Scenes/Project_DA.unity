@@ -139,6 +139,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -388,6 +392,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -472,6 +480,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -544,6 +556,10 @@ PrefabInstance:
     - target: {fileID: 5214752775874103949, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
@@ -711,7 +727,7 @@ CircleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -751,7 +767,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1040,6 +1056,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2030581365200261460, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
     - target: {fileID: 2383643887232733387, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Name
       value: GridRoot
@@ -1096,10 +1116,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6452280461272360188, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
     - target: {fileID: 7221005960426848279, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8771029405566940885, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1212,6 +1240,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -1284,6 +1316,10 @@ PrefabInstance:
     - target: {fileID: 5214752775874103949, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6803611541915551967, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_BodyType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7247063386545739965, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
