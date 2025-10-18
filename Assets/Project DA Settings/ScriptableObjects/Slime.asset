@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb44f71a4ffeac048a6674abf891e732, type: 3}
+  m_Name: Slime
+  m_EditorClassIdentifier: 
+  monster_id: 1
+  monster_name: Slime
+  monster_guide: "\uB290\uB9B0 \uAE30\uBCF8 \uBAAC\uC2A4\uD130\n"
+  monster_grade: 0
+  monster_max_hp: 100
+  monster_def: 10
+  skill_type: melee
+  skill_range: 1
+  skill_cool: 1
+  skill_applies: 0
+  reward_id: 1
