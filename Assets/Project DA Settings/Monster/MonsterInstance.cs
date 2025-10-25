@@ -1,34 +1,34 @@
-// MonsterInstance.cs  (monster_sprite »ç¿ë ¾È ÇÔ)
+ï»¿// MonsterInstance.cs  (monster_sprite ì‚¬ìš© ì•ˆ í•¨)
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MonsterInstance : MonoBehaviour
 {
-    [Header("Á¤Àû µ¥ÀÌÅÍ(½ºÇÁ¶óÀÌÆ® ¾øÀ½ °¡Á¤)")]
+    [Header("ì •ì  ë°ì´í„°(ìŠ¤í”„ë¼ì´íŠ¸ ì—†ìŒ ê°€ì •)")]
     public MonsterStaticData staticData;
 
-    [Header("µ¿Àû µ¥ÀÌÅÍ")]
+    [Header("ë™ì  ë°ì´í„°")]
     public uint instance_id;
     public byte monster_id;
     public uint current_hp;
     public Vector2Int position;
     public byte[] buff = new byte[5];
 
-    [Header("UI(¼±ÅÃ)")]
+    [Header("UI(ì„ íƒ)")]
     public Image hpBar;
 
     SpriteRenderer sr;
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();       // ÇÁ¸®ÆÕ¿¡ ÀÖ´Â ½ºÇÁ¶óÀÌÆ®¸¦ ±×´ë·Î »ç¿ëÇÑ´Ù.
+        sr = GetComponent<SpriteRenderer>();       // í”„ë¦¬íŒ¹ì— ìˆëŠ” ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ê·¸ëŒ€ë¡œ ì‚¬ìš©í•œë‹¤.
         if (instance_id == 0)
             instance_id = (uint)Random.Range(1, int.MaxValue);
     }
 
     void Start()
     {
-        // ¿¡µğÅÍ¿¡¼­ Å×½ºÆ®¿ëÀ¸·Î ¹èÄ¡ÇßÀ» ¶§µµ ¾ÈÀüÇÏ°Ô ÃÊ±âÈ­ÇÑ´Ù.
+        // ì—ë””í„°ì—ì„œ í…ŒìŠ¤íŠ¸ìš©ìœ¼ë¡œ ë°°ì¹˜í–ˆì„ ë•Œë„ ì•ˆì „í•˜ê²Œ ì´ˆê¸°í™”í•œë‹¤.
         if (staticData != null && current_hp == 0)
         {
             monster_id = staticData.monster_id;
@@ -38,7 +38,7 @@ public class MonsterInstance : MonoBehaviour
     }
 
     
-    // SpawnManager°¡ È£ÃâÇÏ´Â ÃÊ±âÈ­ ÇÔ¼ö´Ù.
+    // SpawnManagerê°€ í˜¸ì¶œí•˜ëŠ” ì´ˆê¸°í™” í•¨ìˆ˜ë‹¤.
     public void Init(uint instanceId, MonsterStaticData data, Vector2Int gridPos, Vector2 cellSize)
     {
         staticData = data;
@@ -47,18 +47,18 @@ public class MonsterInstance : MonoBehaviour
         current_hp = data.monster_max_hp;
         position = gridPos;
 
-        // ÇÁ¸®ÆÕÀÇ ½ºÇÁ¶óÀÌÆ®¸¦ ±×´ë·Î ¾´´Ù(º°µµ µ¥ÀÌÅÍ ½ºÇÁ¶óÀÌÆ®°¡ ¾ø¾îµµ OK).
+        // í”„ë¦¬íŒ¹ì˜ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ê·¸ëŒ€ë¡œ ì“´ë‹¤(ë³„ë„ ë°ì´í„° ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì—†ì–´ë„ OK).
         if (!sr) sr = GetComponent<SpriteRenderer>();
-        if (sr) sr.color = GradeTint(data.monster_grade); // µî±Ş »ö Æ¾Æ®¸¸ Àû¿ë(¿øÄ¡ ¾ÊÀ¸¸é »èÁ¦)
+        if (sr) sr.color = GradeTint(data.monster_grade); // ë“±ê¸‰ ìƒ‰ í‹´íŠ¸ë§Œ ì ìš©(ì›ì¹˜ ì•Šìœ¼ë©´ ì‚­ì œ)
 
-        // ¼¿ Å©±â¿¡ ¸ÂÃá ±Õµî ½ºÄÉÀÏ(ÂªÀº º¯ ±âÁØ)ÀÌ´Ù.
+        // ì…€ í¬ê¸°ì— ë§ì¶˜ ê· ë“± ìŠ¤ì¼€ì¼(ì§§ì€ ë³€ ê¸°ì¤€)ì´ë‹¤.
         float s = Mathf.Min(cellSize.x, cellSize.y);
         transform.localScale = new Vector3(s, s, 1f);
 
         UpdateHP();
     }
 
-    // µî±Ş¿¡ µû¸¥ »ö º¸Á¤(¼±ÅÃ)
+    // ë“±ê¸‰ì— ë”°ë¥¸ ìƒ‰ ë³´ì •(ì„ íƒ)
     Color GradeTint(byte grade)
     {
         return grade == 0 ? Color.white
@@ -68,7 +68,7 @@ public class MonsterInstance : MonoBehaviour
 
     public void TakeDamage(uint damage)
     {
-        // DEF´Â 0~100% ºñÀ²·Î °¡Á¤ÇÑ´Ù.
+        // DEFëŠ” 0~100% ë¹„ìœ¨ë¡œ ê°€ì •í•œë‹¤.
         float reduceRate = Mathf.Clamp01(staticData != null ? staticData.monster_def / 100f : 0f);
         int real = Mathf.Max(1, Mathf.RoundToInt(damage * (1f - reduceRate)));
 
@@ -76,6 +76,7 @@ public class MonsterInstance : MonoBehaviour
         UpdateHP();
         if (current_hp == 0) Die();
     }
+
 
     void UpdateHP()
     {

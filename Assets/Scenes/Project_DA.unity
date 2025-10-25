@@ -194,7 +194,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2245078379133861289, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073257854}
   m_SourcePrefab: {fileID: 100100000, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
 --- !u!1 &581420283
 GameObject:
@@ -209,7 +212,9 @@ GameObject:
   - component: {fileID: 581420285}
   - component: {fileID: 581420284}
   - component: {fileID: 581420288}
-  m_Layer: 0
+  - component: {fileID: 581420289}
+  - component: {fileID: 581420290}
+  m_Layer: 9
   m_Name: MageBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,17 +233,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1e6d25ad767684c83d9706f1fc2abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  role: Warrior
-  attackDamage: 12
-  pierceCount: 0
-  stopOnHit: 1
+  launchSpeed: 12
   maxSpeed: 18
-  minSpeedToReturn: 0.6
-  triggerSkillOnWall: 0
-  burstProjectilePrefab: {fileID: 0}
-  burstSpeed: 10
-  burstCount: 4
+  reflectDamping: 0.98
+  minReflectSpeed: 2
+  skinPushOut: 0.03
+  drawDebug: 0
 --- !u!58 &581420285
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -249,7 +249,7 @@ CircleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: fc944184793361443bf9cd02e5f31e0a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -289,7 +289,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -298,8 +298,8 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
+  m_Interpolate: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!4 &581420287
@@ -372,6 +372,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &581420289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581420283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd059de99424aa04e84dd4d27802dadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 128
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  returnWallMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  skinPushOut: 0.04
+  minReflectSpeed: 2
+  reflectDamping: 0.98
+--- !u!114 &581420290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581420283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d0041d7fc997849b63578d7b02f1bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 5
+  skillScale: 0
+  critChance: 0
+  critMultiplier: 1.5
+  perTargetCooldown: 0.2
+  useTrigger: 1
+  monsterMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &678165536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -614,11 +659,40 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+--- !u!114 &868594390 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5640402557633873781, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+  m_PrefabInstance: {fileID: 196641106}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1073257848 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2245078379133861289, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
   m_PrefabInstance: {fileID: 196641106}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1073257854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073257848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616c4a66f1351054696ddfac5e74aa8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staticData: {fileID: 0}
+  fallbackMaxHp: 3
+  currentHp: 0
+  maxHp: 30
+  disableOnDeath: 1
+  hpFill: {fileID: 868594390}
 --- !u!1 &1120245057
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,6 +706,8 @@ GameObject:
   - component: {fileID: 1120245060}
   - component: {fileID: 1120245059}
   - component: {fileID: 1120245058}
+  - component: {fileID: 1120245063}
+  - component: {fileID: 1120245064}
   m_Layer: 9
   m_Name: WarriorBall
   m_TagString: Untagged
@@ -706,17 +782,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1e6d25ad767684c83d9706f1fc2abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  role: Warrior
-  attackDamage: 12
-  pierceCount: 0
-  stopOnHit: 1
+  launchSpeed: 12
   maxSpeed: 18
-  minSpeedToReturn: 0.6
-  triggerSkillOnWall: 0
-  burstProjectilePrefab: {fileID: 0}
-  burstSpeed: 10
-  burstCount: 4
+  reflectDamping: 0.98
+  minReflectSpeed: 2
+  skinPushOut: 0.03
+  drawDebug: 0
 --- !u!58 &1120245060
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -727,7 +798,7 @@ CircleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
+  m_Material: {fileID: 6200000, guid: fc944184793361443bf9cd02e5f31e0a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -776,8 +847,8 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
+  m_Interpolate: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!4 &1120245062
@@ -795,6 +866,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1120245063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120245057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd059de99424aa04e84dd4d27802dadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 128
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  returnWallMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  skinPushOut: 0.04
+  minReflectSpeed: 2
+  reflectDamping: 0.98
+--- !u!114 &1120245064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120245057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d627703546ebd43a7779709fad3c2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 10
+  perTargetCooldown: 0.15
+  useTrigger: 0
+  monsterMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &1283267598
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1054,15 +1167,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1767872237911168949, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2030581365200261460, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
+      objectReference: {fileID: 6200000, guid: fc944184793361443bf9cd02e5f31e0a, type: 2}
+    - target: {fileID: 2030581365200261460, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2383643887232733387, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Name
       value: GridRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2383643887232733387, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4333535565223326316, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4548511248146158970, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_LocalScale.x
@@ -1119,7 +1244,7 @@ PrefabInstance:
     - target: {fileID: 6452280461272360188, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
+      objectReference: {fileID: 6200000, guid: fc944184793361443bf9cd02e5f31e0a, type: 2}
     - target: {fileID: 7221005960426848279, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -1127,7 +1252,7 @@ PrefabInstance:
     - target: {fileID: 8771029405566940885, guid: 064b47dc385da694fa2ca5b5fcde3479, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: a09ac01ef16345b4bb5790171f9abe7f, type: 2}
+      objectReference: {fileID: 6200000, guid: fc944184793361443bf9cd02e5f31e0a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1209,7 +1334,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6356034176760552116, guid: a2dce3cd82e4eb74a82b5af5215694fb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1217,7 +1342,7 @@ SpriteRenderer:
   m_Size: {x: 5.8, y: 9.41}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &1982511592

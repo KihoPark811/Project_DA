@@ -3,135 +3,152 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PartyProjectile2D : MonoBehaviour
 {
-    [HideInInspector] public Rigidbody2D rb;
-    PartyLauncher2D _launcher;
+    [Header("Motion")]
+    [SerializeField] private float launchSpeed = 12f;
+    [SerializeField] private float maxSpeed = 20f;
 
-    // 반환 요청 후 잠시 유예 시간 (즉시 반환 방지)
-    const float RETURN_GRACE = 0.12f;
-    float _timeSinceLaunch;
+    [Header("Bounce")]
+    [Tooltip("반사 후 속도 감쇠 (1 = 완전탄성)")]
+    [Range(0f, 1.1f)] public float reflectDamping = 1.0f;
+    [Tooltip("반사 후 최소 속도")]
+    public float minReflectSpeed = 2.0f;
+    [Tooltip("관통 방지용 분리 거리(법선 방향). 너무 크면 위로 밀려날 수 있음")]
+    [Range(0f, 0.05f)] public float skinPushOut = 0.015f;
 
-    [Header("Combat")]
-    public string role = "Warrior"; // "Warrior" / "Mage" �� ����׿� ��
-    public int attackDamage = 12;
-    public int pierceCount = 0;   // 0=ù ���Ϳ��� ����, >0=�� ����ŭ ����
-    public bool stopOnHit = true; // true�� ���� ���ڸ��� �ӵ� 0
+    [Header("Debug")]
+    public bool drawDebug = false;
 
-    [Header("Move")]
-    public float maxSpeed = 18f;
-    public float minSpeedToReturn = 0.6f;
+    // 내부 상태
+    public Rigidbody2D RB { get; private set; }   // <- 공개 getter
+    public PartyLauncher2D Owner { get; private set; }
 
-    [Header("Wall Skill (�ɼ�)")]
-    public bool triggerSkillOnWall = false;
-    public GameObject burstProjectilePrefab; // ������: �� �浹 �� �̴�ź
-    public float burstSpeed = 10f;
-    public int burstCount = 4; // 4��
-
-    bool _launched;
+    private bool launched;
+    private Vector2 travelDir = Vector2.right;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        gameObject.SetActive(false); // �߻� ������ ��Ȱ��
+        RB = GetComponent<Rigidbody2D>();
+        RB.gravityScale = 0f;
+        RB.freezeRotation = true;
+        RB.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
     }
 
-    public void Launch(Vector2 pos, Vector2 velocity, PartyLauncher2D launcher)
+    void OnEnable()
     {
-        _launcher = launcher;
-        transform.position = pos;
-
-        // ▼ 중요: 반드시 velocity를 '확실히' 넣어준다.
-        rb.linearVelocity = velocity;               // Unity 6에서도 velocity 사용
-        // rb.linearVelocity = velocity;      // (만약 velocity가 먹지 않으면 이 라인을 사용)
-
-        _timeSinceLaunch = 0f;                // 유예시간 초기화
-        gameObject.SetActive(true);           // 혹시나 안전 차원에서 다시 켜두기
+        // 기본 발사(필요 없으면 외부 Launch만 사용)
+        Launch(travelDir, launchSpeed);
     }
 
-    void Update()
+    // [A] 기존 2인자 Launch(방향, 속도) — 유지
+    public void Launch(Vector2 dir, float speed)
     {
-        // ▼ 발사 직후 유예시간 경과 전에는 회수 로직을 건드리지 않는다.
-        _timeSinceLaunch += Time.deltaTime;
-
-        if (_timeSinceLaunch > RETURN_GRACE)
-        {
-            // 속도가 너무 느려지거나, 발사대 근처로 돌아왔을 때만 회수
-            if (_launcher.IsNearLauncher((Vector2)transform.position) ||
-                rb.linearVelocity.magnitude < minSpeedToReturn)
-            {
-                _launcher.RequestReturn(this);
-                // 여기서 바로 false/return으로 끊어주지 않아도, RequestReturn 코루틴이 알아서 회수
-            }
-        }
+        travelDir = dir.sqrMagnitude > 1e-6f ? dir.normalized : Vector2.right;
+        RB.position = transform.position;
+        RB.linearVelocity = travelDir * Mathf.Max(0f, speed);
+        launched = true;
     }
 
-    void OnCollisionEnter2D(Collision2D c)
+    // [B] 런처가 호출하는 3인자 Launch(시작위치, 초기속도, 소유자)
+    public void Launch(Vector2 startPos, Vector2 initialVelocity, PartyLauncher2D owner)
     {
-        int lay = c.collider.gameObject.layer;
-
-        // 1) 몬스터 피격
-        if (((1 << lay) & _launcher.enemyMask) != 0)
-        {
-            if (c.collider.TryGetComponent(out MonsterInstance mi))
-            {
-                mi.TakeDamage((uint)Mathf.Max(1, attackDamage)); // 몬스터 HP 감소
-            }
-
-            if (pierceCount > 0)
-            {
-                pierceCount--; // 관통 남았으면 계속 진행
-            }
-            else
-            {
-                if (stopOnHit)
-                {
-                    rb.linearVelocity = Vector2.zero; // 멈추어 곧 복귀
-                    return;
-                }
-            }
-        }
-
-        // 2) 벽 반사 (겹침 해소 + 정확 반사)
-        if (((1 << lay) & _launcher.wallMask) != 0)
-        {
-            // 접촉점/법선
-            Vector2 n = c.contactCount > 0 ? c.GetContact(0).normal : Vector2.up;
-
-            // 현재 속도/방향
-            Vector2 v = rb.linearVelocity;
-            float speed = v.magnitude;
-            if (speed < 0.0001f) speed = _launcher.projectileSpeed; // 혹시 0이면 보정
-
-            // 콜라이더가 벽 안쪽에 있을 수 있으니 'skin' 만큼 밖으로 밀어냄
-            const float SKIN = 0.02f;
-            rb.position = rb.position + n * SKIN;
-
-            // 반사
-            Vector2 r = Vector2.Reflect(v.normalized, n);
-            rb.linearVelocity = r * Mathf.Max(speed * 0.98f, 2.0f); // 미세 감쇠 + 최소 반사 속도
-
-            // (옵션) 마법사 벽-스킬
-            if (triggerSkillOnWall && burstProjectilePrefab)
-            {
-                for (int i = 0; i < burstCount; i++)
-                {
-                    float a = 360f * i / burstCount;
-                    var go = Instantiate(burstProjectilePrefab);
-                    var p = go.GetComponent<PartyProjectile2D>();
-                    p.attackDamage = Mathf.Max(1, attackDamage / 2);
-                    p.Launch(transform.position,
-                             (Quaternion.Euler(0, 0, a) * Vector2.up) * burstSpeed,
-                             _launcher);
-                    go.SetActive(true);
-                }
-            }
-        }
-
+        Owner = owner;
+        RB.position = startPos;
+        RB.linearVelocity = initialVelocity;
+        travelDir = initialVelocity.sqrMagnitude > 1e-6f ? initialVelocity.normalized : travelDir;
+        launched = true;
+        gameObject.SetActive(true);
     }
 
+    public void SetDirection(Vector2 newDir, float newSpeed = -1f)
+    {
+        travelDir = newDir.sqrMagnitude > 1e-6f ? newDir.normalized : travelDir;
+        if (newSpeed > 0f) RB.linearVelocity = travelDir * newSpeed;
+    }
 
+    // 런처에서 사용할 안전한 설정자
+    public void SetKinematic(bool enable)
+    {
+        RB.bodyType = enable ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        if (enable) RB.linearVelocity = Vector2.zero;
+    }
+
+    // 런처가 반환 완료 시점에 호출하는 콜백(필요 작업 정리)
     public void OnReturned()
     {
-        rb.linearVelocity = Vector2.zero;
-        gameObject.SetActive(false);
+        launched = false;
+        RB.linearVelocity = Vector2.zero;
+        // 필요시 파티 슬롯 복귀, 이펙트, 상태 초기화 등 추가
+    }
+
+    void Update() { /* 비물리 로직만 */ }
+
+    void FixedUpdate()
+    {
+        if (!launched) return;
+        float spd = RB.linearVelocity.magnitude;
+        if (spd > maxSpeed) RB.linearVelocity = RB.linearVelocity.normalized * maxSpeed;
+    }
+
+    void OnCollisionEnter2D(Collision2D c) { HandleWallBounce(c); }
+    void OnCollisionStay2D(Collision2D c)
+    {
+        if (c.contactCount == 0) return;
+        var cp = c.GetContact(0);
+        Vector2 n = cp.normal.normalized;
+        float vn = Vector2.Dot(RB.linearVelocity, n);
+        if (vn < 0f) RB.linearVelocity -= vn * n; // 안쪽 성분 제거
+    }
+
+    private void HandleWallBounce(Collision2D c)
+    {
+        if (c.contactCount <= 0) return;
+
+        Vector2 v = RB.linearVelocity;
+        if (v.sqrMagnitude < 1e-6f) v = c.relativeVelocity;
+        if (v.sqrMagnitude < 1e-6f) return;
+
+        // 가장 정면 접점 선택
+        Vector2 minusV = -v.normalized;
+        ContactPoint2D best = c.GetContact(0);
+        float bestDot = Vector2.Dot(minusV, best.normal);
+        for (int i = 1; i < c.contactCount; i++)
+        {
+            var cp = c.GetContact(i);
+            float d = Vector2.Dot(minusV, cp.normal);
+            if (d > bestDot) { bestDot = d; best = cp; }
+        }
+
+        Vector2 n = best.normal.normalized;
+
+        // 수직/수평 스냅
+        const float snapEps = 0.15f;
+        if (Mathf.Abs(n.x) > Mathf.Abs(n.y))
+        {
+            if (Mathf.Abs(n.x) > (1f - snapEps)) n = new Vector2(Mathf.Sign(n.x), 0f);
+        }
+        else
+        {
+            if (Mathf.Abs(n.y) > (1f - snapEps)) n = new Vector2(0f, Mathf.Sign(n.y));
+        }
+
+        // 조건부 분리
+        float vn = Vector2.Dot(RB.linearVelocity, n);
+        if (vn < 0f) RB.position = RB.position + n * Mathf.Min(skinPushOut, 0.02f);
+
+        // 반사
+        Vector2 dir = RB.linearVelocity.normalized;
+        Vector2 reflectedDir = Vector2.Reflect(dir, n).normalized;
+
+        float inSpeed = RB.linearVelocity.magnitude;
+        float outSpeed = Mathf.Max(inSpeed * Mathf.Max(0f, reflectDamping), minReflectSpeed);
+
+        RB.linearVelocity = reflectedDir * outSpeed;
+        travelDir = RB.linearVelocity.sqrMagnitude > 1e-6f ? RB.linearVelocity.normalized : reflectedDir;
+
+        if (drawDebug)
+        {
+            Debug.DrawRay(best.point, n * 0.5f, Color.green, 0.25f);
+            Debug.DrawRay(best.point, RB.linearVelocity.normalized * 0.5f, Color.yellow, 0.25f);
+        }
     }
 }
