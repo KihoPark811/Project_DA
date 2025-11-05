@@ -85,7 +85,7 @@ public class PartyLauncher2D : MonoBehaviour
         foreach (var proj in partyQueue)
         {
             if (!proj) continue;
-            // 새 3인자 Launch 사용 (시작위치, 초기속도, 소유자)
+            // 새 3인자 Launch(시작 위치, 초기 속도, 소유자)
             proj.Launch(muzzle.position, DirFromUp(_aimFromUp) * projectileSpeed, this);
             yield return new WaitForSeconds(fireInterval);
         }
@@ -100,19 +100,30 @@ public class PartyLauncher2D : MonoBehaviour
 
     IEnumerator ReturnRoutine(PartyProjectile2D p)
     {
-        // isKinematic(폐기) 대신 bodyType을 설정하는 래퍼 사용
+        // 🔴 리턴 "시작" 시점에 바로 전투/충돌 상태 종료
+        //  - launched = false
+        //  - collider.enabled = false
+        p.OnReturned();
+
+        // 물리 힘은 끄고, 위치만 부드럽게 이동
         p.SetKinematic(true);
         p.RB.linearVelocity = Vector2.zero;
 
         while (Vector2.Distance(p.transform.position, muzzle.position) > 0.05f)
         {
-            p.transform.position = Vector3.Lerp(p.transform.position, muzzle.position, Time.deltaTime * returnLerpSpeed);
+            p.transform.position = Vector3.Lerp(
+                p.transform.position,
+                muzzle.position,
+                Time.deltaTime * returnLerpSpeed
+            );
             yield return null;
         }
 
+        // 다시 발사 준비: 물리는 켜되, 충돌은 Launch()에서 켜줌
         p.SetKinematic(false);
-        p.OnReturned(); // 이제 존재!
+        // 여기서는 다시 OnReturned()를 호출할 필요 없음 (이미 위에서 처리됨)
     }
 
-    Vector2 DirFromUp(float deg) => (Vector2)(Quaternion.Euler(0, 0, deg) * Vector2.up);
+    Vector2 DirFromUp(float deg)
+        => (Vector2)(Quaternion.Euler(0, 0, deg) * Vector2.up);
 }

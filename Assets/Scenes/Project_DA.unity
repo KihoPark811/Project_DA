@@ -1196,6 +1196,14 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.613278
       objectReference: {fileID: 0}
@@ -2476,10 +2484,12 @@ GameObject:
   - component: {fileID: 581420288}
   - component: {fileID: 581420289}
   - component: {fileID: 581420290}
-  - component: {fileID: 581420291}
   - component: {fileID: 581420294}
   - component: {fileID: 581420293}
   - component: {fileID: 581420292}
+  - component: {fileID: 581420296}
+  - component: {fileID: 581420295}
+  - component: {fileID: 581420298}
   m_Layer: 9
   m_Name: MageBall
   m_TagString: Untagged
@@ -2582,7 +2592,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.41, y: 1.61, z: -0.16566658}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2678,24 +2688,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d0041d7fc997849b63578d7b02f1bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &581420291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581420283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97d627703546ebd43a7779709fad3c2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseDamage: 5
-  perTargetCooldown: 0.15
-  useTrigger: 1
-  monsterMask:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &581420292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2740,6 +2732,74 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc848e05ed00474b965392d9f5b9ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &581420295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581420283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7101ece404fe95e4cb31536835d134ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 2261200632234985721, guid: 611e71a228a818a4388b684bfd03cc5c, type: 3}
+  enhancedDamageMultiplier: 2
+--- !u!114 &581420296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581420283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1f9f7b02d641d428f7166c225f4978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warriorMask:
+    serializedVersion: 2
+    m_Bits: 512
+  monsterMask:
+    serializedVersion: 2
+    m_Bits: 256
+  onHitWarrior:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 581420295}
+        m_TargetAssemblyTypeName: MageEnhancedSkillTrigger, Assembly-CSharp
+        m_MethodName: TriggerEnhancedSkill
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  onHitMonster:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &581420298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581420283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bee2e51f8a2d2f43b9cdee3e4131a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isWarrior: 0
+  isMage: 1
+  damageMultiplier: 2
+  buffDuration: 1.5
+  warriorBuffSlashColor: {r: 0, g: 0.4115842, b: 0.84276724, a: 1}
+  mageBuffMissileColor: {r: 0.7395117, g: 0.014437626, b: 0.91823894, a: 1}
 --- !u!1 &596831379
 GameObject:
   m_ObjectHideFlags: 0
@@ -3119,6 +3179,14 @@ PrefabInstance:
     - target: {fileID: 7830898752292251837, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3642,6 +3710,14 @@ PrefabInstance:
     - target: {fileID: 7830898752292251837, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4196,6 +4272,14 @@ PrefabInstance:
     - target: {fileID: 7830898752292251837, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5164,6 +5248,7 @@ GameObject:
   - component: {fileID: 1120245067}
   - component: {fileID: 1120245066}
   - component: {fileID: 1120245065}
+  - component: {fileID: 1120245069}
   m_Layer: 9
   m_Name: WarriorBall
   m_TagString: Untagged
@@ -5321,7 +5406,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.27, y: 1.51, z: -0.16566658}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5381,6 +5466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   conditionCount: 1
+  damageMultiplier: 1
   slashPrefab: {fileID: 7135124347425902741, guid: 5251d4b2a784a5e499c8de03cc3d7178, type: 3}
   offset: 0.6
   baseDamage: 12
@@ -5411,6 +5497,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc848e05ed00474b965392d9f5b9ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1120245069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120245057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bee2e51f8a2d2f43b9cdee3e4131a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isWarrior: 1
+  isMage: 0
+  damageMultiplier: 2
+  buffDuration: 1
+  warriorBuffSlashColor: {r: 1, g: 0.54402506, b: 0.54402506, a: 1}
+  mageBuffMissileColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1152920645
 GameObject:
   m_ObjectHideFlags: 0
@@ -9575,6 +9679,14 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.21
       objectReference: {fileID: 0}
@@ -9650,6 +9762,14 @@ PrefabInstance:
     - target: {fileID: 7830898752292251837, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8822374862307828954, guid: 34dd06d7c5994814c822bdcb17924f21, type: 3}
       propertyPath: m_LocalPosition.x

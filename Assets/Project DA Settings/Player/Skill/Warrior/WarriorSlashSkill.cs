@@ -8,6 +8,10 @@ public class WarriorSlashSkill : MonoBehaviour, ISkill
     [SerializeField] int conditionCount = 1;                 // 1회마다
     public int ConditionCount => conditionCount;
 
+    [Header("Damage Settings")]
+    [HideInInspector] 
+    public float damageMultiplier = 1f;
+
     [Header("Slash")]
     public GameObject slashPrefab; // HitboxArea2D가 붙은 프리팹
     public float offset = 0.6f;    // 충돌지점에서 살짝 전방
@@ -30,7 +34,8 @@ public class WarriorSlashSkill : MonoBehaviour, ISkill
         // 범위/데미지 세팅
         if (go.TryGetComponent(out HitboxArea2D hb))
         {
-            hb.damage = baseDamage;
+            hb.damage = (int)(baseDamage * damageMultiplier);
+            // hb.damage = baseDamage;
             hb.radius = radius;
 
             // Enemy 레이어 마스크(런처에서 가져오기)

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -4830410077334854895}
   - component: {fileID: 5753368299769217094}
   - component: {fileID: -2091550313021634114}
+  - component: {fileID: -4715330558981916322}
   m_Layer: 0
   m_Name: MagicMissile
   m_TagString: Untagged
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 206617b6f18118041a3f9ed6570acb56, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7395117, g: 0.014437626, b: 0.91823894, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -190,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnWall: 0
-  lifeTime: 2.5
+  lifeTime: 1.5
 --- !u!114 &-2091550313021634114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,3 +205,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angleOffsetDeg: 0
+--- !u!114 &-4715330558981916322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2261200632234985721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af997a6b38307254f9adec78f744e069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreMask:
+    serializedVersion: 2
+    m_Bits: 512
