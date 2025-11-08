@@ -72,7 +72,12 @@ public class MonsterInstance : MonoBehaviour
         float reduceRate = Mathf.Clamp01(staticData != null ? staticData.monster_def / 100f : 0f);
         int real = Mathf.Max(1, Mathf.RoundToInt(damage * (1f - reduceRate)));
 
+        uint prevHp = current_hp; // 이전 체력 저장 (로그용)
         current_hp = (uint)Mathf.Max(0, (int)current_hp - real);
+
+        Debug.Log($"[Monster Damage Log] {gameObject.name} 피격! 받은 피해: {real}, HP: {prevHp} → {current_hp}");
+
+
         UpdateHP();
         if (current_hp == 0) Die();
     }

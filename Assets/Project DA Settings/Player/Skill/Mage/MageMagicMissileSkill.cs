@@ -1,45 +1,75 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class MageMagicMissileSkill : MonoBehaviour, ISkill
 {
     public string Name => "MageMagicMissile";
-    public TriggerType Trigger => TriggerType.WallAll;      // º® Ãæµ¹ ½Ã
-    public ConditionType Condition => ConditionType.Hit;    // È÷Æ® ±âÁØ
+    public TriggerType Trigger => TriggerType.WallAll;
+    public ConditionType Condition => ConditionType.Hit;
     [SerializeField] int conditionCount = 1;
     public int ConditionCount => conditionCount;
 
     [Header("Missile Spawn")]
-    public GameObject projectilePrefab;   // ¡ç MagicMissile ÇÁ¸®ÆÕ
-    public int missiles = 2;              // º® 1¹ø Ãæµ¹´ç »ı¼º ¼ö
-    public float spreadDeg = 15f;         // ¡¾15µµ ¹«ÀÛÀ§
-    public float speed = 10f;             // ¹Ì»çÀÏ ¼Óµµ
-    public float spawnOffset = 0.05f;     // º®¿¡¼­ Á¶±İ ¶ç¿ö ½ºÆù
+    public GameObject projectilePrefab;   // ë¯¸ì‚¬ì¼ í”„ë¦¬íŒ¹(ì•„ë˜ Projectile ìŠ¤í¬ë¦½íŠ¸ê°€ ë¶™ì–´ ìˆì–´ì•¼ í•¨)
+    public int missiles = 1;              // ê°•í™” íŠ¸ë¦¬ì—ì„œ ì“°ëŠ” ê°’ â€“ í•„ìš”í•˜ë©´ ëŠ˜ì–´ë‚˜ë„ ë¨
+    public float spreadDeg = 0f;          // ì§€ê¸ˆì€ ì•ˆ ì“°ì§€ë§Œ, ë‹¤ë¥¸ ì½”ë“œê°€ ì°¸ì¡°í•˜ë¯€ë¡œ ë‚¨ê²¨ë‘ 
+    public float speed = 10f;             // ë¯¸ì‚¬ì¼ ì´ë™ ì†ë„
+    public float spawnOffset = 0.1f;      // ë²½ì—ì„œ ì‚´ì§ ë–¨ì–´ì§„ ìœ„ì¹˜
+
+    // origin ê¸°ì¤€ìœ¼ë¡œ ê°€ì¥ ê°€ê¹Œìš´ ëª¬ìŠ¤í„° ì°¾ê¸°
+    MonsterInstance FindNearestMonster(Vector2 origin, float maxRadius = 999f)
+    {
+        MonsterInstance[] monsters = FindObjectsOfType<MonsterInstance>();
+        if (monsters == null || monsters.Length == 0)
+            return null;
+
+        MonsterInstance nearest = null;
+        float bestSqr = maxRadius * maxRadius;
+
+        foreach (var m in monsters)
+        {
+            if (!m || !m.isActiveAndEnabled) continue;
+
+            Vector2 pos = m.transform.position;
+            float sqr = (pos - origin).sqrMagnitude;
+
+            if (sqr < bestSqr)
+            {
+                bestSqr = sqr;
+                nearest = m;
+            }
+        }
+
+        return nearest;
+    }
 
     public void Execute(in SkillContext ctx)
     {
-        if (!projectilePrefab || ctx.owner == null) return;
+        if (!projectilePrefab || ctx.owner == null)
+            return;
 
-        // º® ¹İ»ç ¹æÇâÀ» ±âÁØÀ¸·Î '¾ÕÀ» ÇâÇÑ' ±âº» ¹æÇâ
-        var ownerVel = ctx.owner.RB.linearVelocity;
-        Vector2 baseDir = ownerVel.sqrMagnitude > 1e-6f
-            ? Vector2.Reflect(ownerVel.normalized, ctx.normal)
-            : (ctx.normal == Vector2.zero ? Vector2.right : Vector2.Reflect(Vector2.right, ctx.normal));
+        // 1) ë¯¸ì‚¬ì¼ ìƒì„± ìœ„ì¹˜ : ë²½ ì¶©ëŒ ì§€ì ì—ì„œ ì¡°ê¸ˆ ë–¨ì–´ì§„ ê³³
+        Vector2 spawnPos2D = (Vector2)ctx.point + ctx.normal * spawnOffset;
+        Vector3 spawnPos3D = new Vector3(spawnPos2D.x, spawnPos2D.y, 0f);
 
-        Vector3 spawnPos = new Vector3(ctx.point.x, ctx.point.y, 0f) + (Vector3)(ctx.normal * spawnOffset);
+        // 2) ê·¸ ì§€ì  ê¸°ì¤€, ê°€ì¥ ê°€ê¹Œìš´ ëª¬ìŠ¤í„° ì°¾ê¸°
+        MonsterInstance target = FindNearestMonster(spawnPos2D);
+        if (target == null)
+        {
+            // ëª¬ìŠ¤í„° ì—†ìœ¼ë©´ ê·¸ëƒ¥ ì•ˆ ì¨
+            return;
+        }
 
+        // 3) missiles ìˆ˜ë§Œí¼ ë¯¸ì‚¬ì¼ ìƒì„± (ëª¨ë‘ ê°™ì€ íƒ€ê²Ÿìœ¼ë¡œ ê°„ë‹¤)
         for (int i = 0; i < missiles; i++)
         {
-            float rand = Random.Range(-spreadDeg, spreadDeg);
-            Vector2 dir = Quaternion.Euler(0, 0, rand) * baseDir;
+            GameObject go = Instantiate(projectilePrefab, spawnPos3D, Quaternion.identity);
 
-            var go = GameObject.Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
-            var p = go.GetComponent<PartyProjectile2D>();
-            p.attackDamage = Mathf.Max(1, ctx.owner.attackDamage);     // µ¥¹ÌÁö´Â ¿øº»°ú ¸ÂÃã
-            p.stopOnHit = false;                                       // °üÅëÇü
-            // °üÅë È½¼ö´Â ÇÁ¸®fabÀÇ PartyProjectile2D.pierceCount °ªÀ» »ç¿ë(2)
+            var proj = go.GetComponent<MageMagicMissileProjectile>();
+            if (proj != null)
+            {
+                proj.Init(target.transform, speed);
+            }
 
-            // ¹Ì»çÀÏÀº ·±Ã³(Owner) ¸¶½ºÅ©¸¦ ±×´ë·Î ½áµµ µÇ°í, null·Î µÖµµ µ¿ÀÛÇÔ
-            p.Launch((Vector2)spawnPos, dir * speed, ctx.owner.Owner);
             go.SetActive(true);
         }
     }

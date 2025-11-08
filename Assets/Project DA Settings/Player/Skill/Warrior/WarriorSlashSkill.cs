@@ -37,6 +37,7 @@ public class WarriorSlashSkill : MonoBehaviour, ISkill
             hb.damage = (int)(baseDamage * damageMultiplier);
             // hb.damage = baseDamage;
             hb.radius = radius;
+            Debug.Log($"[Warrior Basic Skill] 슬래시 발동! 피해량: {hb.damage}, 범위: {hb.radius}");
 
             // Enemy 레이어 마스크(런처에서 가져오기)
             var mask = LayerMask.GetMask("Enemy");
